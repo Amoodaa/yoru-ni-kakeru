@@ -42,4 +42,12 @@ Only the sun (and later moments of real light) may bloom. Type stays below the b
 | id | lines | status |
 |---|---|---|
 | `dusk` | 沈むように… / 二人だけの空が広がる夜に | done |
-| `karaoke` | everything after | placeholder |
+| `fence` | verse 1, 46.7–85.0 s: lyrics in the chain-link cells, sunset bokeh, rack focus | done |
+| `clock` ×2 | pre-choruses, 85.0–104.7 / 224.2–247.1 s: hairline clockwork on the beat grid | done |
+| `race` ×2 | choruses, 104.7–156.3 / 247.1–275.9 s: two lights racing through a window city | done |
+| `gaze` | 156.3–172.8 s: a gate of light seen only in part; 嫌いだ hard cuts | done |
+| `flap` | verse 2, 172.8–206.6 s: a station split-flap board, one row per line | done |
+| `rain` | 206.6–224.2 s: lyrics written into condensation on a night window | done |
+| `wind` | 275.9–302.0 s: fog tears open to the sky, wind streamlines | done |
+| `outro` | 302.0–338 s: the rooftop again; the two lights become a constellation; credits | done |
+| `karaoke` | anything without a scene (starter fallback) | placeholder |
