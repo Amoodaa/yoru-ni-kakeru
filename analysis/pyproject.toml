@@ -1,0 +1,31 @@
+[project]
+name = "analysis"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch>=2.7",
+    "torchaudio>=2.7",
+    "demucs>=4.0.1",
+    "librosa>=0.11",
+    "soundfile>=0.13",
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "pykakasi>=2.3",
+    "faster-whisper>=1.1",
+    "numba>=0.68.1",
+    "beat-this",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+beat-this = { git = "https://github.com/CPJKU/beat_this" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

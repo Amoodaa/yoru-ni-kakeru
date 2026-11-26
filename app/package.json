@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "stills": "bun scripts/render.ts stills",
+    "sheet": "bun scripts/render.ts sheet",
+    "video": "bun scripts/render.ts video --samples auto --shutter 0.2",
+    "draft": "bun scripts/render.ts video --samples 1 --x264 preset=veryfast",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/opentype.js": "^1.3.10",
+    "@types/three": "^0.186.0",
+    "playwright-core": "^1.63.0",
+    "vite": "^8.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "opentype.js": "^2.0.0",
+    "three": "^0.186.0"
+  }
+}

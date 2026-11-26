@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>夜に駆ける</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #050505; color: #eee9df; font: 12px/1.4 ui-monospace, Menlo, monospace; overflow: hidden; }
+  #wrap { position: absolute; inset: 0 0 64px 0; display: flex; align-items: center; justify-content: center; }
+  #c { max-width: 100%; max-height: 100%; aspect-ratio: 16/9; background: #000; cursor: pointer; }
+  #ui { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; padding: 6px 12px; box-sizing: border-box; background: #0b0b0c; }
+  #ui.hidden { display: none; } #ui.hidden ~ #wrap { bottom: 0; }
+  #scrub { width: 100%; margin: 0; accent-color: #f08a5d; }
+  #marks { position: relative; height: 16px; }
+  .mark { position: absolute; top: 0; height: 14px; border-left: 1px solid #f08a5d; color: #9c978f; font-size: 9px; overflow: hidden; white-space: nowrap; padding-left: 2px; cursor: pointer; box-sizing: border-box; }
+  .mark:hover { color: #eee9df; background: #f08a5d22; }
+  #row { display: flex; gap: 12px; align-items: center; }
+  #info { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #9c978f; }
+  #cc { display: flex; gap: 6px; }
+  #cc button { font: 11px/1 system-ui, sans-serif; color: #8e97b8; background: transparent; border: 1px solid #3a3f5a; border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+  #cc button.on { color: #0a0e22; background: #f3eee4; border-color: #f3eee4; }
+  /* captions sit over the bottom of the picture, one line per enabled track */
+  #captions { position: absolute; left: 0; right: 0; bottom: 84px; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+  #ui.hidden ~ #captions { bottom: 20px; }
+  #captions div { max-width: 80vw; padding: 3px 12px; border-radius: 4px; background: rgba(5, 6, 14, 0.62); color: #f3eee4; font: 500 clamp(13px, 1.6vw, 22px)/1.35 "Gothic-400", system-ui, sans-serif; text-align: center; }
+  #captions div[lang="ar"] { font-family: "Segoe UI", "Noto Naskh Arabic", "Geeza Pro", system-ui, sans-serif; }
+  #start { position: absolute; inset: 0 0 64px 0; display: flex; align-items: center; justify-content: center; font: 20px system-ui, sans-serif; color: #f3eee4; letter-spacing: 0.2em; cursor: pointer; background: rgba(5, 6, 14, 0.55); }
+  #start.gone { display: none; }
+  #errs { display: none; position: fixed; top: 8px; left: 8px; right: 8px; max-height: 40vh; overflow: auto; background: #300; color: #fbb; padding: 8px; white-space: pre-wrap; z-index: 9; }
+  body.export #ui, body.export #errs, body.export #captions, body.export #start { display: none !important; }
+  body.export #wrap { inset: 0; }
+  body.export #c { width: 1920px; height: 1080px; max-width: none; max-height: none; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="c"></canvas></div>
+<div id="ui">
+  <div id="marks"></div>
+  <input id="scrub" type="range" min="0" value="0" />
+  <div id="row"><div id="info"></div><div id="cc" title="captions (c)"></div></div>
+</div>
+<div id="captions"></div>
+<div id="start">▶ play</div>
+<pre id="errs"></pre>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

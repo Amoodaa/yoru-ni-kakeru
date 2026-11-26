@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>夜に駆ける: timing check</title>
+<style>
+  body { margin: 0; background: #0d0f14; color: #e8e6e1; font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px; }
+  audio { width: 100%; }
+  #meta { display: flex; gap: 18px; align-items: center; margin: 14px 0 26px; font: 13px ui-monospace, monospace; color: #8b8f99; }
+  #beat, #bar { width: 18px; height: 18px; border-radius: 50%; background: #2a2e38; }
+  #lines { min-height: 260px; }
+  .line { font-size: 40px; line-height: 1.5; color: #555b66; transition: opacity .2s; }
+  .line.cur { color: #e8e6e1; }
+  .line.next { font-size: 26px; }
+  .m { position: relative; }
+  .m.sung { color: #ff7a59; }
+  .kana { font-size: 15px; color: #8b8f99; letter-spacing: .06em; }
+  .kana .sung { color: #ff7a59; }
+  .lo { text-decoration: underline wavy #c94; text-underline-offset: 8px; }
+  ol { font: 13px ui-monospace, monospace; color: #8b8f99; columns: 2; }
+  ol li { cursor: pointer; } ol li:hover { color: #e8e6e1; }
+</style>
+<main>
+  <audio id="a" src="audio/song.mp3" controls></audio>
+  <div id="meta"><span>beat</span><div id="beat"></div><span>bar (downbeat)</span><div id="bar"></div><span id="t"></span><span id="bpm"></span></div>
+  <div id="lines"></div>
+  <p class="kana">Orange = sung (per mora). Wavy underline = word confidence &lt; 0.3. Click a line below to jump to it.</p>
+  <ol id="list" start="0"></ol>
+</main>
+<script type="module">
+const [ly, au] = await Promise.all([fetch('data/lyrics.json').then(r => r.json()), fetch('data/audio.json').then(r => r.json())]);
+const a = document.getElementById('a'), box = document.getElementById('lines');
+const list = document.getElementById('list');
+ly.lines.forEach(L => {
+  const li = document.createElement('li');
+  li.textContent = `${L.start.toFixed(2)}  ${L.text}`;
+  li.onclick = () => { a.currentTime = Math.max(0, L.start - 1.5); a.play(); };
+  list.append(li);
+});
+// split each display word into the kana morae it is timed by; draw the reading under the line
+function render(L, cls) {
+  const d = document.createElement('div'); d.className = 'line ' + cls;
+  const top = document.createElement('div'), kana = document.createElement('div'); kana.className = 'kana';
+  for (const w of L.words) {
+    const span = document.createElement('span'); span.textContent = w.w; span.className = 'm' + (w.conf < 0.3 ? ' lo' : '');
+    span.dataset.s = w.start; span.dataset.e = w.end; top.append(span);
+    for (const [k, s] of w.mora) { const m = document.createElement('span'); m.textContent = k; m.dataset.s = s; kana.append(m); }
+    kana.append(' ');
+  }
+  d.append(top, kana); return d;
+}
+let shown = -1;
+const beats = au.beats, downs = au.downbeats;
+const bi = t => { let lo = 0, hi = beats.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; beats[m] <= t ? lo = m : hi = m - 1; } return lo; };
+function tick() {
+  const t = a.currentTime;
+  let cur = ly.lines.findIndex((L, i) => t < (ly.lines[i + 1]?.start ?? 1e9) - 0.6);
+  if (cur !== shown) {
+    shown = cur; box.replaceChildren();
+    if (cur >= 0) { box.append(render(ly.lines[cur], 'cur')); if (ly.lines[cur + 1]) box.append(render(ly.lines[cur + 1], 'next')); }
+  }
+  for (const el of box.querySelectorAll('.cur [data-s]')) {
+    const s = +el.dataset.s, e = el.dataset.e ? +el.dataset.e : s;
+    el.classList.toggle('sung', t >= s);
+  }
+  const i = bi(t), sinceBeat = t - beats[i];
+  document.getElementById('beat').style.background = sinceBeat >= 0 && sinceBeat < 0.1 ? '#ff7a59' : '#2a2e38';
+  const isDown = downs.some(d => Math.abs(d - beats[i]) < 1e-3);
+  document.getElementById('bar').style.background = isDown && sinceBeat >= 0 && sinceBeat < 0.15 ? '#ffd166' : '#2a2e38';
+  document.getElementById('t').textContent = t.toFixed(2) + ' s';
+  if (beats[i + 1]) document.getElementById('bpm').textContent = (60 / (beats[i + 1] - beats[i])).toFixed(0) + ' BPM';
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
