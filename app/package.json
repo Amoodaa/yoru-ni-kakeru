@@ -8,7 +8,7 @@
     "build": "vite build && bun scripts/subset-fonts.ts",
     "stills": "bun scripts/render.ts stills",
     "sheet": "bun scripts/render.ts sheet",
-    "video": "bun scripts/render.ts video --samples auto --shutter 0.2",
+    "video": "bun scripts/render.ts video --samples 8 --shutter 0.2 --workers 6 --preset medium",
     "draft": "bun scripts/render.ts video --samples 1 --x264 preset=veryfast",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },

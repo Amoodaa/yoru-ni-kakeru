@@ -14,7 +14,7 @@ bun run dev                     # preview: http://localhost:5173  (?t=22 starts 
 bun run stills --t 22.5,43      # PNGs in out/stills (check your work here)
 bun run sheet --from 0 --to 47 --n 12 --cols 3
 bun run draft --to 47 --out ../out/intro-draft.mp4   # quick video, 1 sample per frame
-bun run video                   # final 1080p60 with motion blur
+bun run video                   # final 1080p60 with motion blur (8 sub-frames, 6 workers: ~30 min)
 ```
 
 `mise.toml` pins bun, so plain `bun` works inside this folder. Preview keys: space play/pause,
